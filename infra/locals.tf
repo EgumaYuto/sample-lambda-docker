@@ -1,0 +1,3 @@
+locals {
+  name = "lambda-docker"
+}
