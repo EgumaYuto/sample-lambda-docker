@@ -2,7 +2,7 @@ resource "aws_lambda_function" "function" {
   function_name = local.name
   role          = aws_iam_role.role.arn
   package_type  = "Image"
-  image_uri     = "${local.account_id}.dkr.ecr.${local.region}.amazonaws.com/lambda-docker@sha256:50685ac4a6cb126153962d9103e0347de8d35545346468605b4b9c63be6014c5"
+  image_uri     = "${local.account_id}.dkr.ecr.${local.region}.amazonaws.com/${local.name}:latest"
   timeout       = 60
 
   lifecycle {
