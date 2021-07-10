@@ -1,10 +1,17 @@
+const { WebClient, LogLevel } = require("@slack/web-api");
+const AWS = require('aws-sdk');
+
+const client = new WebClient('token', {
+    logLevel: LogLevel.DEBUG
+})
+
 exports.lambdaHandler = async (event) => {
     console.log(JSON.stringify(event))
     const path = event.requestContext.http.path
     if (path === '/hello') {
         return helloResp()
     } else if (path === '/request') {
-        return requestResp()
+        return await requestResp()
     } else if (path.startsWith('/request/')) {
         return requestIdResp()
     } else {
@@ -24,7 +31,15 @@ const helloResp = () => {
     };
 }
 
-const requestResp = () => {
+const requestResp = async () => {
+    await client.chat.postMessage({
+        token: await new AWS.SSM().getParameter({
+            Name: process.env['SLACK_TOKEN_SSM_NAME'],
+            WithDecryption: true
+        }),
+        channel: 'C0135D5Q5NH',
+        text: 'Approve お願いします'
+    })
     const body = "{ \"requestId\": \"uuid-hogehoge\" }";
     return {
         statusCode: 200,

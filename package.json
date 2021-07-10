@@ -9,6 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@slack/client": "^5.0.2",
+    "aws-sdk": "^2.943.0",
+    "axios": "^0.21.1",
     "faker": "^5.1.0",
     "get-stream": "^6.0.0",
     "pdfkit": "^0.11.0"

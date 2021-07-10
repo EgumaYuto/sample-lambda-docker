@@ -8,6 +8,12 @@ resource "aws_lambda_function" "function" {
   lifecycle {
     ignore_changes = [image_uri]
   }
+
+  environment {
+    variables = {
+      SLACK_TOKEN_SSM_NAME = aws_ssm_parameter.slack_api_token.name
+    }
+  }
 }
 
 data "aws_iam_policy_document" "assume" {
@@ -26,6 +32,13 @@ data "aws_iam_policy_document" "main" {
     actions   = ["logs:CreateLogStream", "logs:PutLogEvents"]
     effect    = "Allow"
     resources = ["${aws_cloudwatch_log_group.log_group.arn}:*"]
+  }
+
+  // TODO 本当は権限を絞るほうがいい
+  statement {
+    actions   = ["*"]
+    effect    = "Allow"
+    resources = ["*"]
   }
 }
 
