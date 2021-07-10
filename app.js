@@ -31,10 +31,7 @@ const helloResp = () => {
 }
 
 const requestResp = async () => {
-    const token = await new AWS.SSM().getParameter({
-        Name: process.env['SLACK_TOKEN_SSM_NAME'],
-        WithDecryption: true
-    }).promise().then(param => param.Parameter.Value);
+    const token = await getSlackToken()
     await client.chat.postMessage({
         token: token,
         channel: 'C0135D5Q5NH',
@@ -73,4 +70,11 @@ const notFoundResp = () => {
         body: body,
         isBase64Encoded: false,
     };
+}
+
+const getSlackToken = async () => {
+    return await new AWS.SSM().getParameter({
+        Name: process.env['SLACK_TOKEN_SSM_NAME'],
+        WithDecryption: true
+    }).promise().then(param => param.Parameter.Value);
 }
