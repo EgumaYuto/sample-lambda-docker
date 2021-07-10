@@ -6,7 +6,6 @@ const client = new WebClient('token', {
 })
 
 exports.lambdaHandler = async (event) => {
-    console.log(JSON.stringify(event))
     const path = event.requestContext.http.path
     if (path === '/hello') {
         return helloResp()
@@ -32,11 +31,12 @@ const helloResp = () => {
 }
 
 const requestResp = async () => {
+    const token = await new AWS.SSM().getParameter({
+        Name: process.env['SLACK_TOKEN_SSM_NAME'],
+        WithDecryption: true
+    }).promise().then(param => param.Parameter.Value);
     await client.chat.postMessage({
-        token: await new AWS.SSM().getParameter({
-            Name: process.env['SLACK_TOKEN_SSM_NAME'],
-            WithDecryption: true
-        }),
+        token: token,
         channel: 'C0135D5Q5NH',
         text: 'Approve お願いします'
     })
