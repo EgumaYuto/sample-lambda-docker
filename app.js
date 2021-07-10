@@ -1,12 +1,12 @@
-exports.lambdaHandler = async (_event) => {
-    const body = "OK"
+exports.lambdaHandler = async (event) => {
+    console.log(JSON.stringify(event))
+    const body = "{ \"message\": \"Hello from Lambda!\" }";
     return {
         statusCode: 200,
         headers: {
-            'Content-Length': Buffer.byteLength(body),
             'Content-Type': 'application/json',
         },
-        isBase64Encoded: true,
-        body: body
+        body: body,
+        isBase64Encoded: false,
     };
 };
